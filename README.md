@@ -69,10 +69,23 @@ But first you have to eliminate some syntax gapes between SystemVerilog and Veri
 | `4'b0110` | XOR | `result = a ^ b` |
 | `4'b0111` | NOT | `result = ~a` |
 
+<img width="999" height="530" alt="image" src="https://github.com/user-attachments/assets/1aab019c-c71c-431d-9522-92decd304500" />
+
+
 ## Architecture
-Модуль спроектирован по принципу параллельных вычислений:
-1. **`b_subtractor_prep`**: подготавливает операнд B (инверсия и +1) для вычитания.
-2. **`int_16_adder`**: 16-битный сумматор (4 блока `lookahead_4_adder`), вычисляет сумму/разность и флаги.
-3. **`shifter`**: выполняет сдвиги влево/вправо (реализован простой коммутацией проводов, не занимает LUT).
-4. **Логический блок**: параллельно вычисляет AND, OR, XOR, NOT.
-5. **Выходной мультиплексор**: на основе `command` выбирает нужный результат и соответствующие ему флаги.
+The ALU is built on the principle of parallel computation. All operations are calculated simultaneously, and a final multiplexer selects the result based on the command:
+1. **`b_subtractor_prep`**: Inverts B and sets c_in=1 for subtraction.
+2. **`int_16_adder`**: 16-bit CLA (4 x 4-bit blocks).
+3. **`shifter`**: Direct wire routing for shifts (0 LUTs).
+4. **Logic Block**: Parallel bitwise operations.
+5. **Output Mux**: Selects result and flags.
+
+## Roadmap (Module)
+
+☑ INT16 ALU Core
+□ CLA between lookahead modules
+□ Parametrization
+□ Interfaces
+
+## Contacts
+krjekovichav@gmail.com
