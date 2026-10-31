@@ -83,8 +83,11 @@ The ALU is built on the principle of parallel computation. All operations are ca
 ## Roadmap (Module)
 
 ☑ INT16 ALU Core
+
 () CLA between lookahead modules
+
 () Parametrization
+
 () Interfaces
 
 ## Contacts
