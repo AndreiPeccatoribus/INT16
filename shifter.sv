@@ -5,8 +5,6 @@ module shifter(
 	output logic [15:0] out,
 	output logic        c_out,
 	
-	output logic Z, // ноль
-	output logic S, // число положительное
 	output logic C, // перенос/заём
 	output logic V  // переполнение
 );
@@ -26,17 +24,11 @@ module shifter(
 		end
 	end
 	
-	//Z
-	assign Z = (out == 16'h0000);
-	
-	//S 
-	assign S = out[15];
-	
 	//C 
 	assign C = c_out;
 	
 	//V 
-	assign V = 1'b0; // сдвиг не может вызвать переполнение, лишний бит всегда уходит в c_out, сам термин переполнение не имеет здесь смысла, поэтому просто 0.
+	assign V = inp[15] ^ out[15]; // сдвиг не может вызвать переполнение, лишний бит всегда уходит в c_out, сам термин переполнение не имеет здесь смысла, поэтому просто 0.
 
 
 endmodule

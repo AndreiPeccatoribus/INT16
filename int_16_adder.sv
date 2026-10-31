@@ -11,8 +11,6 @@ module int_16_adder (
 	output logic [15:0] sum,
 	output logic        c_out,
 	
-	output logic Z, // ноль
-	output logic S, // число положительное
 	output logic C, // перенос/заём
 	output logic V  // переполнение
 );
@@ -42,12 +40,6 @@ module int_16_adder (
 		.a(a[15:12]), .b(b[15:12]), .c_in(c_3),
 		.a_out(sum[15:12]), .c_out(c_out)
 	);
-	
-	//Z
-	assign Z = (sum == 16'h0000);
-	
-	//S 
-	assign S = sum[15];
 	
 	//C 
 	assign C = c_out;

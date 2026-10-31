@@ -32,8 +32,6 @@ module ALU (
 
 	logic [15:0] add_result;
 	logic add_c_out;
-	logic add_Z; // ноль
-	logic add_S; // число положительное
 	logic add_C; // перенос/заём
 	logic add_V; // переполнение
 	
@@ -42,8 +40,6 @@ module ALU (
 	
 	logic [15:0] shift_result;
 	logic shift_c_out;
-	logic shift_Z; // ноль
-	logic shift_S; // число положительное
 	logic shift_C; // перенос/заём
 	logic shift_V; // переполнение
 	
@@ -65,8 +61,6 @@ module ALU (
 					shift_command = 0; 
 					result = add_result; 
 					c_out = add_c_out;
-					Z = add_Z;
-					S = add_S;
 					C = add_C;
 					V = add_V;
 			end
@@ -74,8 +68,6 @@ module ALU (
 					shift_command = 0; 
 					result = add_result;
 					c_out = add_c_out;
-					Z = add_Z;
-					S = add_S;
 					C = add_C;
 					V = add_V;
 			end
@@ -83,8 +75,6 @@ module ALU (
 					shift_command = 1; 
 					result = shift_result;
 					c_out = shift_c_out;
-					Z = shift_Z;
-					S = shift_S;
 					C = shift_C;
 					V = shift_V;
 			end
@@ -92,8 +82,6 @@ module ALU (
 					shift_command = 0; 
 					result = shift_result;
 					c_out = shift_c_out;
-					Z = shift_Z;
-					S = shift_S;
 					C = shift_C;
 					V = shift_V;
 			end
@@ -101,8 +89,6 @@ module ALU (
 					shift_command = 0; 
 					result = and_result;
 					c_out = 1'b0;
-					Z = (and_result == 16'h0000);
-					S = and_result[15];
 					C = 1'b0;
 					V = 1'b0;
 			end
@@ -110,8 +96,6 @@ module ALU (
 					shift_command = 0; 
 					result = or_result;
 					c_out = 1'b0;
-					Z = (or_result == 16'h0000);
-					S = or_result[15];
 					C = 1'b0;
 					V = 1'b0;
 			end
@@ -119,8 +103,6 @@ module ALU (
 					shift_command = 0; 
 					result = xor_result;
 					c_out = 1'b0;
-					Z = (xor_result == 16'h0000);
-					S = xor_result[15];
 					C = 1'b0;
 					V = 1'b0;
 			end
@@ -128,8 +110,6 @@ module ALU (
 					shift_command = 0; 
 					result = not_result;
 					c_out = 1'b0;
-					Z = (not_result == 16'h0000);
-					S = not_result[15];
 					C = 1'b0;
 					V = 1'b0;
 			end
@@ -138,8 +118,6 @@ module ALU (
 						shift_command = 0; 
 						result = 16'h0000;
 						c_out = 1'b0;
-						Z = 1'b0;
-						S = 1'b0;
 						C = 1'b0;
 						V = 1'b0;
 		endcase
@@ -160,8 +138,6 @@ module ALU (
 		.sum(add_result),
 		.c_out(add_c_out),
 		
-		.Z(add_Z), // ноль
-		.S(add_S), // число положительное
 		.C(add_C), // перенос/заём
 		.V(add_V)  // переполнение
 	);
@@ -173,10 +149,11 @@ module ALU (
 		.out(shift_result),
 		.c_out(shift_c_out),
 		
-		.Z(shift_Z), // ноль
-		.S(shift_S), // число положительное
 		.C(shift_C), // перенос/заём
 		.V(shift_V)  // переполнение
 	);
+	
+	assign Z = (result == 16'h0000);
+	assign S = result[15];
 	
 endmodule
