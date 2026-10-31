@@ -1,4 +1,4 @@
-# <p align="center"> FP16 </p>
+# <p align="center"> FP16 Softcore </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/SystemVerilog-1A1A1A?style=for-the-badge&logo=systemverilog&logoColor=white" alt="SystemVerilog">
@@ -18,35 +18,52 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/AndreiPeccatoribus/INT16?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/AndreiPeccatoribus/INT16?style=for-the-badge)
 
-Арифметико-логическое устройство (АЛУ) для 16-битного процессора. 
-Спроектировано с использованием сумматора с параллельным переносом (Carry Lookahead Adder) для максимального быстродействия.
+This repository contains the **16-bit Integer ALU**, the first building block of a custom 16-bit processor designed for digital filters and control systems. 
+
+While the main computational unit will be based on **IEEE 754 FP16** (floating-point), this INT16 core serves as the "service engine" responsible for memory addressing, loop counters, and bitwise operations.
 
 ## Features
-* 16-битные входы/выходы.
-* Поддержка арифметики (ADD, SUB), сдвигов (SHL, SHR) и логических операций (AND, OR, XOR, NOT).
-* Аппаратное вычисление флагов (Zero, Sign, Carry, Overflow).
-* Параллельное вычисление арифметики, логики и сдвигов (выбор результата через выходной мультиплексор).
+* 16-bit inputs/outputs.
+* Arithmetic (ADD, SUB), Shifts (SHL, SHR), and Logic (AND, OR, XOR, NOT).
+* Hardware flag generation (Zero, Sign, Carry, Overflow).
+* Fully combinational logic (fast single-cycle execution).
+* Modular design using 4-bit Carry Lookahead Adders (CLA).
+
+## Quick Start (Simulation)
+It has been written for Quartus and Questa jn SystemVerilod VHDL language. 
+You probably can encounter with some troubles trying to run it in Icarus. To simulate the ALU using Icarus Verilog and GTKWave:
+```bash
+# Compile
+iverilog -g2012 -o alu_sim.vvp ALU.sv lookahead.sv int_16_adder.sv b_subtractor_prep.sv shifter.sv tb_alu.sv
+# Run simulation
+vvp alu_sim.vvp
+# View waveforms
+gtkwave tb_alu.vcd
+```
+But first you have to eliminate some syntax gapes between SystemVerilog and Verilog languages. You can do it by yourself or contact me via links below the readme.
 
 ## Interface
 | Port | Direction | Width | Description |
 | :--- | :--- | :--- | :--- |
-| `a` | Input | 16 | Первый операнд |
-| `b` | Input | 16 | Второй операнд |
-| `command` | Input | 4 | Код операции |
-| `result` | Output | 16 | Результат операции |
-| `c_out` | Output | 1 | Перенос из 16-го разряда / Выпавший бит при сдвиге |
-| `Z` | Output | 1 | Флаг нуля (Result == 0) |
-| `S` | Output | 1 | Флаг знака (Result[15]) |
-| `C` | Output | 1 | Флаг переноса/заёма |
-| `V` | Output | 1 | Флаг переполнения (только для знаковых операций) |
+| `a` | Input | 16 | First operand |
+| `b` | Input | 16 | Second operand |
+| `command` | Input | 4 | Opcode |
+| `result` | Output | 16 | Operation result |
+| `c_out` | Output | 1 | Carry out (or shifted-out bit) |
+| `Z` | Output | 1 | Zero flag (Result == 0) |
+| `S` | Output | 1 | Sign flag (Result[15]) |
+| `C` | Output | 1 | Carry/Borrow flag* |
+| `V` | Output | 1 | Overflow flag (signed ops only) |
 
-## Operations (Instruction Set)
+* Note on Carry Flag: When subtracting (SUB), the C flag follows the 8085 convention: C=1 means no borrow (A ≥ B), C=0 means borrow occurred (A < B). For standard x86-style Borrow, invert the flag.
+
+## Operations (Opcode)
 | Command | Operation | Description |
 | :--- | :--- | :--- |
 | `4'b0000` | ADD | `result = a + b` |
-| `4'b0001` | SUB | `result = a - b` (также используется для сравнения чисел по флагам) |
-| `4'b0010` | SHL | `result = a << 1` (логический сдвиг влево) |
-| `4'b0011` | SHR | `result = a >> 1` (логический сдвиг вправо) |
+| `4'b0001` | SUB | `result = a - b` ( you can use flags for comparison ) |
+| `4'b0010` | SHL | `result = a << 1` ( logical left shift x2 for unsigned ) |
+| `4'b0011` | SHR | `result = a >> 1` ( logical right shift /2 for unsigned ) |
 | `4'b0100` | AND | `result = a & b` |
 | `4'b0101` | OR  | `result = a \| b` |
 | `4'b0110` | XOR | `result = a ^ b` |
