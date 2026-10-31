@@ -1,7 +1,9 @@
-# 16-bit Integer ALU
+# <p align="center"> FP16 </p>
+<p align="center">
+<img src="logo.gif" alt="FP16 Core Logo" width="600" />
+</p>
 
-![FP16 Core Logo](logo.gif)
-
+# Chapter: 16-bit Integer ALU service core
 Арифметико-логическое устройство (АЛУ) для 16-битного процессора. 
 Спроектировано с использованием сумматора с параллельным переносом (Carry Lookahead Adder) для максимального быстродействия.
 
