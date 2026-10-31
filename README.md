@@ -69,6 +69,8 @@ But first you have to eliminate some syntax gapes between SystemVerilog and Veri
 | `4'b0110` | XOR | `result = a ^ b` |
 | `4'b0111` | NOT | `result = ~a` |
 
+## Testbench
+I wrote the testbench via deepseek. But I will appreciate it very much if you undertake to test my design manually. In that case please ask me to make you a contributor.
 <img width="999" height="530" alt="image" src="https://github.com/user-attachments/assets/1aab019c-c71c-431d-9522-92decd304500" />
 
 
