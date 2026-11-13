@@ -8,7 +8,9 @@ module lookahead_4_adder (
 	input  logic       c_in,
 	
 	output logic [3:0] a_out,
-	output logic       c_out
+	output logic       g_P,
+	output logic       g_G,
+	output logic    c_out // оставлено для использования по отдельности
 );
 
 	logic [3:0] p;
@@ -24,11 +26,15 @@ module lookahead_4_adder (
 		end
 	end
 
-	// Формулы переносов в виде Sum of Products (Если надо Product of Sums, то p XOR a, b -- только OR a, b )
+	// Формулы внутренних переносов
 	assign c_0 = g[0] | (p[0] & c_in);
 	assign c_1 = g[1] | (p[1] & g[0]) | (p[1] & p[0] & c_in);
 	assign c_2 = g[2] | (p[2] & g[1]) | (p[2] & p[1] & g[0]) | (p[2] & p[1] & p[0] & c_in);
-	assign c_out = g[3] | (p[3] & g[2]) | (p[3] & p[2] & g[1]) | (p[3] & p[2] & p[1] & g[0]) | (p[3] & p[2] & p[1] & p[0] & c_in);
+	assign c_out = g[3] | (p[3] & g[2]) | (p[3] & p[2] & g[1]) | (p[3] & p[2] & p[1] & g[0]) | (p[3] & p[2] & p[1] & p[0] & c_in); // теперь это не надо подключать я вынес это в 74182 
+	
+	// Формулы глобальной пропаганды и глобального поколения (звучит невероятно пафосно)
+	assign g_P = p[0] & p[1] & p[2] & p[3];
+	assign g_G = g[3] | (g[2] & p[3]) | (g[1] & p[2] & p[3]) | (g[0] & p[1] & p[2] & p[3]); // сигнал где-то рождается и не глохнет
 	
 	/*	
 	assign a_out[0] =   ~a[0] && ~b[0] &&  c_in ||

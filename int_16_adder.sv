@@ -14,31 +14,60 @@ module int_16_adder (
 	output logic C, // перенос/заём
 	output logic V  // переполнение
 );
+	logic [3:0] global_propagation;
+	logic [3:0] global_generation;
+	logic [3:0] c_massive;
+	
+	assign c_out = c_massive[3];
+	
+    lookahead_adders_conductor conductor(
+		.g_P(global_propagation),
+		.g_G(global_generation),
+		.c_in(c_in),
 
-	logic c_1;
+		.c_out(c_massive),
+		// и для того, чтобы его самого можно было объединять в глобально-глобальную схему:
+		.gg_P(),
+		.gg_G()
+	);
 	
 	lookahead_4_adder adder0 (
-		.a(a[3:0]), .b(b[3:0]), .c_in(c_in),
-		.a_out(sum[3:0]), .c_out(c_1)
+		.a(a[3:0]),
+		.b(b[3:0]),
+		.c_in(c_in),
+		.a_out(sum[3:0]),
+		.g_P(global_propagation[0]),
+		.g_G(global_generation[0]),
+		.c_out()
 	);
-	
-	logic c_2;
 	
 	lookahead_4_adder adder1 (
-		.a(a[7:4]), .b(b[7:4]), .c_in(c_1),
-		.a_out(sum[7:4]), .c_out(c_2)
+		.a(a[7:4]),
+		.b(b[7:4]),
+		.c_in(c_massive[0]),
+		.a_out(sum[7:4]),
+		.g_P(global_propagation[1]),
+		.g_G(global_generation[1]),
+		.c_out()
 	);
 	
-	logic c_3;
-	
 	lookahead_4_adder adder2 (
-		.a(a[11:8]), .b(b[11:8]), .c_in(c_2),
-		.a_out(sum[11:8]), .c_out(c_3)
+		.a(a[11:8]), .b(b[11:8]),
+		.c_in(c_massive[1]),
+		.a_out(sum[11:8]),
+		.g_P(global_propagation[2]),
+		.g_G(global_generation[2]),
+		.c_out()
 	);
 	
 	lookahead_4_adder adder3 (
-		.a(a[15:12]), .b(b[15:12]), .c_in(c_3),
-		.a_out(sum[15:12]), .c_out(c_out)
+		.a(a[15:12]),
+		.b(b[15:12]),
+		.c_in(c_massive[2]),
+		.a_out(sum[15:12]),
+		.g_P(global_propagation[3]),
+		.g_G(global_generation[3]),
+		.c_out()
 	);
 	
 	//C 
