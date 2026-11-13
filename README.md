@@ -69,8 +69,12 @@ But first you have to eliminate some syntax gapes between SystemVerilog and Veri
 | `4'b0110` | XOR | `result = a ^ b` |
 | `4'b0111` | NOT | `result = ~a` |
 
-## Testbench
-I wrote the testbench via deepseek. But I will appreciate it very much if you undertake to test my design manually. In that case please ask me to make you a contributor.
+## Verification
+RTL: written by my hands.
+Testbench (tb_alu.sv): generated with DeepSeek.
+It checks: flags and all the commands in basic scenarios.
+Independent review and extra tests are welcome: please open an issue or a pull request.
+I merge changes manually. I will appreciate it very much if you undertake to make your contribution in verification.
 <img width="999" height="530" alt="image" src="https://github.com/user-attachments/assets/1aab019c-c71c-431d-9522-92decd304500" />
 
 
